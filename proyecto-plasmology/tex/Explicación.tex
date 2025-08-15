@@ -1,0 +1,141 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[a4paper]{geometry}
+\geometry{top=2.5cm, bottom=2.0cm,left=2.25cm, right=2.25cm}
+\usepackage{amsmath,amsfonts,amssymb,graphicx,fancyhdr,vmargin,mathtools,nccmath,aligned-overset,cancel,nccmath}
+\usepackage[most]{tcolorbox}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{ 
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+\tcbset{colback=yellow!10!white, colframe=red!50!black, 
+        highlight math style= {enhanced, %<-- needed for the ’remember’ options
+            colframe=blue,colback=red!10!white,boxsep=0pt}
+            }
+
+%\setlength{\lheadwidth}{60mm}
+\setlength{\textwidth}{163mm}
+\setlength{\topmargin}{10mm}
+\setlength{\evensidemargin}{-1.5cm}
+\setlength{\oddsidemargin}{2cm} %espacio de la izquierda
+\setlength{\headheight}{40pt} %espacio de arriba
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\begin{picture}(0,0)
+\put(0,0){\includegraphics[width=30mm]{Epico}}\end{picture}}
+\chead{Física compu ll}
+\rhead{03-10-2021}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+
+
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+%\newcommand{\HRule}[]{\rule{\lheadwidth}{0.5}}
+
+
+
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+
+\includegraphics[width=0.9\textwidth]{holi}~\\[1cm]
+
+\HRule \\[0.4cm]
+ \LARGE 
+  
+  \textbf{Proyecto N°1:}\\[0.4cm]
+   \textbf{\textit{''Particle in cell''}}\\[0.4cm]
+    \emph{Física computacional II\\[0.4cm]}
+\HRule \\[1.0cm]
+
+{ \large
+
+    Felipe Ahumada Silva [2020430411]\\[0.1cm]
+}
+
+{ \large
+    Profesor: Roberto Navarro. \\
+    Ayudante: Lorena Sepulveda.
+}
+
+\vfill
+\textsc{\large Facultad de Cs. Físicas y Matemáticas,\\Universidad de Concepción} \\[0.4cm]
+{\large 03 de octubre de 2021}
+\end{center}
+\end{titlepage}
+\newpage
+
+\section{Particle in cell}
+
+Tienes una cierta caja en una dimensión, en una dimension uno tiene un espacio en una direccion x, y uno dice que empieza desde 0 hasta un cierto L (tamaño caja), uno dice que las particulas solo se pueden mover en esta caja y en esa caja uno tiene particulas dispersas por toda la caja, en el método particle in cell uno dice que va a dividir un espacio en varias celdas y a cada celda se le conoce cierto campo electrico (E1, E2,...,En) y uno solo conoce el campo electrico en la mitad de la celda, en esta celda uno va contando cuantas partículas hay en cada celda y por lo tanto en cada celda uno conoce cierta densidad (n0,n1,...), por ejemplo uno dice, 'en una caja hay 3 partículas y la densidad en esa caja sería $n_0 = \frac{3}{\Delta x}$', al final uno tiene un $n_i$ que va a representar la densidad en cierta posición $x_i$ ($n_i = n(x_i)$) el $x_i$ sería las mitades de las celdas.
+
+\section{Campo eléctrico}
+
+El campo eléctrico se calcula con la ecuación de Gauss:
+
+\begin{equation*}
+    \nabla \cdot \overrightarrow{E} = n-n_0
+\end{equation*}
+
+La divergencia del campo eléctrico es igual a la densidad, donde n es la densidad de electrones ($n(x_i)$) y el $n_0$ es un background, es la cantidad de protones y uno dice que $n_0=1$, uno dice eso porque los protones son masivos en comparación que los electrones (son como moscas moviendose alrededor de un auto, por lo tanto, simplemente los protones no se mueven.\\
+
+    En una dimensión la divergencia del campo eléctrico viene dada por:
+    
+\begin{equation*}
+    \nabla \cdot \overrightarrow{E} = \frac{\partial E_x}{\partial x}
+\end{equation*}
+asi nuestra ecuación a resolver es:
+
+\begin{equation*}
+    \nabla \cdot \overrightarrow{E} = n - 1
+\end{equation*}
+
+Notemos que n depende del espacio ya que nos preguntamos cual es la densidad en cada celda. Así, podemos realizar una aproximación:
+
+\begin{equation*}
+    \frac{E_x(x_{i+1})-E(x_{i-1})}{2\Delta x} = n(x_i)-1 %Esto es una derivada centrada
+\end{equation*}
+
+Acá podemos despejar el primer término
+
+\begin{equation*}
+    E_x(x_{i+1}) = E(x_{i-1}) - 2\Delta x(n(x_i)-1)
+\end{equation*}
+
+Esto nos dice que si uno conoce $E_0$ puedes conocer $E_2$ por ejemplo, esto es el método conocido como el salto de la rana
+
+\section{Las partículas}
+
+Podemos escribir nuestras partículas como:
+
+\begin{align*}
+    \frac{dx}{dt} &= v \\
+    \frac{dv}{dt} &= E
+\end{align*}
+
+Usando el método del salto de la rana:
+
+\begin{align*}
+    x(t_{i+1}) &= x(t_i) + \Delta t v(t_{i+1/2})\\
+    v(t_{i+1/2}) &= v(t_{i-1/2}) + \Delta t E(t_i)
+\end{align*}
+
+Notemos que el campo depende del tiempo y del espacio, entonces, $E_x$ significa el campo eléctrico en cada una de las celdas al mismo tiempo.
+
+\section{Detalles}
+
+Eso de que pasa si el campo empuja una partícula fuera del espacio
+
+\end{document}
