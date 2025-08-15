@@ -1,50 +1,79 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9023388&assignment_repo_type=AssignmentRepo)
-# Proyecto de programación - Física Computacional II (510240 - 2022)
+# Simulación de la Inestabilidad Two-Stream
 
-Escriba su propuesta en los documentos incluidos en este repositorio. 
+Este proyecto simula el movimiento de partículas en un plasma electrostático unidimensional utilizando el método **PIC** (*Particle in Cell*).  
+Se implementa en **Python** y permite visualizar el fenómeno de la **inestabilidad two-stream** mediante una animación en espacio de fases.
 
-Las imagenes deben ser alojadas en la carpeta [img](img). El software
-que usará para llevar a cabo su proyecto, deben ser alojados en la
-carpeta [src](src). Este proyecto será evaluado mediante la plataforma
-[GitHub](https://github.com).
+---
 
-- [propuesta.tex](propuesta.tex): En este documento debe identificar su propuesta de proyecto y explicar en
-  detalle los objetivos, metodologías y plan
-  de trabajo.
-- [referencias.bib](referencias.bib): Este es un archivo que sirve
-  como base de datos de las referencias usadas en la propuesta.
-  
-  
-Note que puede sincronizar [overleaf](https://www.overleaf.com) con
-github. Así, puede editar los documentos `.tex` en overleaf y subirlos
-(casi) inmeditamente a github con un simple click.
+## 📜 Descripción
+La simulación distribuye aleatoriamente un gran número de partículas en una línea de longitud \(L\), dividida en celdas de tamaño \(\Delta x\).  
+Se calcula la densidad de carga en cada celda, se determina el campo eléctrico resolviendo la ecuación de Maxwell en 1D y se actualizan posiciones y velocidades usando las ecuaciones de movimiento.  
+El resultado final es una animación que muestra cómo evoluciona el sistema y cómo emerge la inestabilidad two-stream.
 
-Primero, debe permitir que overleaf se comunique con GitHub:
-- Inicie sesión en overleaf y diríjase a la [configuración de su
-  cuenta](https://www.overleaf.com/user/settings) (Account -> Account
-  Settings).
-  
-- Busque la sección "GitHub Integration" y apriete en el botón "Link
-  to your GitHub account". 
-  
-- En la nueva ventana, inicie sesión en GituHub si es que no lo ha
-  hecho. Si aparece una lista de organizaciones, apriete "Grant" en
-  cada una de ellas. Luego, apriete en "Authorize overleaf".
-  
+---
 
-Una vez haya finalizado el proceso anterior, puede sincronizar sus proyectos entre GitHub y overleaf:
-- En overleaf, seleccione "New project" en el menú izquierdo.
-- En el menú que aparecerá, seleccione "Import from GitHub".
-- Debe aparecer una lista con todos los repositorios en el que usted
-  es dueño. Busque el repositorio donde se encuentran los
-  documentos latex que quiere sincronizar y apriete en "Import to Overleaf".
-  
-Los cambios no se sincronizarán automáticamente, debe hacerlo manualmente:
-- Seleccione "Menu" en la esquina superior izquierda.
-- Luego, busque la opción "GitHub".
-  - Si han habido cambios en GitHub, debe importar los cambios a Overleaf: Apriete en "Pull GitHub changes into Overleaf"
-  - Si quiere exportar los cambios desde Overleaf, apriete "Push Overleaf changes into GitHub"
+## 🧮 Formulación matemática
 
---- 
-Este es un documento escrito en el formato [Markdown de
-GitHub](https://guides.github.com/features/mastering-markdown/).
+El método **PIC** en 1D se basa en:
+
+1. **Cálculo de densidad de carga:**
+\[
+\rho_i = \frac{N_i}{N_p} - 1
+\]
+donde \(N_i\) es el número de partículas en la celda \(i\), y \(N_p\) es el número total de partículas.
+
+2. **Campo eléctrico a partir de la ecuación de Maxwell:**
+\[
+\frac{dE}{dx} = \rho
+\]
+Integrando numéricamente:
+\[
+E_i = \Delta x \sum_{j=0}^i \rho_j - \langle E \rangle
+\]
+
+3. **Ecuaciones de movimiento:**
+\[
+\frac{dv}{dt} = -E(x)
+\]
+\[
+\frac{dx}{dt} = v
+\]
+
+4. **Condiciones de borde periódicas:**
+\[
+x \rightarrow x \ \mathrm{mod} \ L
+\]
+
+---
+
+## 🎯 Objetivos
+### Objetivo general
+- Simular el movimiento de partículas en un plasma electrostático.
+
+### Objetivos específicos
+1. Formular las ecuaciones necesarias para el modelo.
+2. Implementar en Python un código que realice la simulación.
+3. Visualizar el fenómeno de la inestabilidad two-stream.
+
+---
+
+## 🛠️ Metodología
+1. Verificar condiciones de borde (periódicas).
+2. Calcular la densidad de carga en cada celda.
+3. Estimar el campo eléctrico.
+4. Actualizar posiciones y velocidades de las partículas en cada paso temporal.
+5. Generar una animación del espacio de fases.
+
+---
+
+## 📊 Resultados esperados
+- Descripción correcta del movimiento de partículas en 1D.
+- Representación visual de la inestabilidad two-stream.
+- Código eficiente capaz de manejar decenas de miles de partículas.
+
+---
+
+## 📦 Requisitos
+Instalar las librerías necesarias:
+```bash
+pip install numpy matplotlib tqdm
